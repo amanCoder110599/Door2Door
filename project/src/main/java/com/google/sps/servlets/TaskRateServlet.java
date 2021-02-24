@@ -5,25 +5,19 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.sps.data.Task;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import java.text.ParseException;
 
 /** Servlet facilitating assign task. */
 @WebServlet("/task/rate")
@@ -33,8 +27,7 @@ public class TaskRateServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long taskId = getParameter(request, "taskId", -1);
-    if (taskId == -1)
-      return;
+    if (taskId == -1) return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
     float completionRating = Float.parseFloat(request.getParameter("rating"));
@@ -44,9 +37,9 @@ public class TaskRateServlet extends HttpServlet {
     }
 
     Entity taskEntity;
-    try{
+    try {
       taskEntity = datastore.get(KeyFactory.createKey("Task", taskId));
-    }catch (Exception e) {
+    } catch (Exception e) {
       System.out.println(e);
       return;
     }
@@ -66,11 +59,12 @@ public class TaskRateServlet extends HttpServlet {
     return value;
   }
 
-  private int getNumberOfTasksCompleted(long assigneeId){
+  private int getNumberOfTasksCompleted(long assigneeId) {
     Query query = new Query("Task");
     Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL, assigneeId);
     Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
-    CompositeFilter assigneeActiveFilter = CompositeFilterOperator.and(assigneeFilter, activeFilter);
+    CompositeFilter assigneeActiveFilter =
+        CompositeFilterOperator.and(assigneeFilter, activeFilter);
     query.setFilter(assigneeActiveFilter);
 
     /*
@@ -79,15 +73,14 @@ public class TaskRateServlet extends HttpServlet {
     */
     int count = datastore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
 
-
     return count;
   }
 
-  private void setRatingForUser(int count, long assigneeId, float completionRating){
+  private void setRatingForUser(int count, long assigneeId, float completionRating) {
     Entity userEntity;
-    try{
+    try {
       userEntity = datastore.get(KeyFactory.createKey("User", assigneeId));
-    }catch (Exception e) {
+    } catch (Exception e) {
       System.out.println(e);
       return;
     }

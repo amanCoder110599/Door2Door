@@ -4,24 +4,13 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.sps.data.Task;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /** Servlet facilitating assign task. */
 @WebServlet("/task/assign")
@@ -35,8 +24,7 @@ public class TaskAssignServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long taskId = getParameter(request, "taskId", -1);
-    if (taskId == -1)
-      return;
+    if (taskId == -1) return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
 
@@ -47,9 +35,9 @@ public class TaskAssignServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity taskEntity;
-    try{
+    try {
       taskEntity = datastore.get(KeyFactory.createKey("Task", taskId));
-    }catch (Exception e) {
+    } catch (Exception e) {
       System.out.println(e);
       return;
     }

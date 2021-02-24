@@ -3,12 +3,11 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.KeyFactory;
-import javax.servlet.ServletException;
 
 public final class User {
 
@@ -29,8 +28,8 @@ public final class User {
   /**
    * Static function to get a User Object from datastore from corresponding email.
    *
-   * @return The User object corresponding to the email, if the user is registered in datastore.
-   *         If no such entity is stored in datastore, then it returns null.
+   * @return The User object corresponding to the email, if the user is registered in datastore. If
+   *     no such entity is stored in datastore, then it returns null.
    * @param User e-mail id.
    */
   public static User getUserFromEmail(String userEmail) {
@@ -58,8 +57,8 @@ public final class User {
   /**
    * Static function to get a User Object from datastore from corresponding Datastore id.
    *
-   * @return The User object corresponding to the id, if the user is registered in datastore.
-   *         If no such entity is stored in datastore, then it returns null.
+   * @return The User object corresponding to the id, if the user is registered in datastore. If no
+   *     such entity is stored in datastore, then it returns null.
    * @param User id in datastore
    */
   public static User getUserFromId(long id) {
@@ -104,5 +103,4 @@ public final class User {
   public boolean isProfileComplete() {
     return (this.name.length() > 0);
   }
-
 }

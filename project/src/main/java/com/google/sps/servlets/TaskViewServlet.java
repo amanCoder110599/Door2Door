@@ -9,27 +9,21 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.sps.data.Task;
 import com.google.sps.data.User;
 import java.io.IOException;
-import java.lang.NumberFormatException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 /** Servlet facilitating viewing task details. */
 @WebServlet(urlPatterns = {"/task/view/*"})
@@ -87,8 +81,7 @@ public class TaskViewServlet extends HttpServlet {
 
       // Prepare the list of applicants
       List<User> taskApplicantList = new ArrayList<>();
-      Filter taskIdFilter = new FilterPredicate("taskId",
-          Query.FilterOperator.EQUAL, task.getId());
+      Filter taskIdFilter = new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
       Query applicantsQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
       PreparedQuery preparedQuery = datastore.prepare(applicantsQuery);
 
@@ -106,12 +99,12 @@ public class TaskViewServlet extends HttpServlet {
       User creator = User.getUserFromId(task.getCreatorId());
       request.setAttribute("creator", creator);
 
-      Filter taskIdFilter = new FilterPredicate("taskId",
-          Query.FilterOperator.EQUAL, task.getId());
-      Filter applicantIdFilter = new FilterPredicate("applicantId",
-          Query.FilterOperator.EQUAL, loggedInUser.getId());
-      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
-          Arrays.<Filter>asList(taskIdFilter, applicantIdFilter));
+      Filter taskIdFilter = new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
+      Filter applicantIdFilter =
+          new FilterPredicate("applicantId", Query.FilterOperator.EQUAL, loggedInUser.getId());
+      Filter compositeFilter =
+          new CompositeFilter(
+              CompositeFilterOperator.AND, Arrays.<Filter>asList(taskIdFilter, applicantIdFilter));
 
       Query appliedQuery = new Query("TaskApplicants").setFilter(compositeFilter);
       PreparedQuery preparedQuery = datastore.prepare(appliedQuery);
@@ -136,12 +129,12 @@ public class TaskViewServlet extends HttpServlet {
     request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
 
     // Dispatch request to Task View
-    request.getRequestDispatcher("/WEB-INF/jsp/task-view.jsp")
-           .forward(request, response);
+    request.getRequestDispatcher("/WEB-INF/jsp/task-view.jsp").forward(request, response);
   }
 
   /**
    * Returns the Task Id from the URI.
+   *
    * @return The task ID, if a valid Id is there in the URI, else null.
    * @param uri The request URI.
    */
@@ -166,8 +159,8 @@ public class TaskViewServlet extends HttpServlet {
   /**
    * If present, get the request parameter identified by name, else return defaultValue.
    *
-   * @return The request parameter, or the default value if the parameter
-   *         was not specified by the client
+   * @return The request parameter, or the default value if the parameter was not specified by the
+   *     client
    * @param request The HTTP Servlet Request.
    * @param name The name of the rquest parameter.
    * @param defaultValue The default value to be returned if required parameter is unspecified.
@@ -179,5 +172,4 @@ public class TaskViewServlet extends HttpServlet {
     }
     return value;
   }
-
 }
