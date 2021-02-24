@@ -2,24 +2,15 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.sps.data.User;
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import com.google.gson.Gson;
 
 @WebServlet(urlPatterns = {"/profile/*"})
 public class ProfileViewServlet extends HttpServlet {
@@ -62,12 +53,12 @@ public class ProfileViewServlet extends HttpServlet {
     request.setAttribute("isMyProfile", (profileUser.getId() == loggedInUser.getId()));
 
     // Dispatch request to User Profile View
-    request.getRequestDispatcher("/WEB-INF/jsp/user-profile.jsp")
-           .forward(request, response);
+    request.getRequestDispatcher("/WEB-INF/jsp/user-profile.jsp").forward(request, response);
   }
 
   /**
    * Returns the User Id from the URI.
+   *
    * @return The user ID, if a valid Id is there in the URI, else null.
    * @param uri The request URI.
    * @param loggedInUser The logged in user, in case of /profile/me
@@ -93,5 +84,4 @@ public class ProfileViewServlet extends HttpServlet {
 
     return userId;
   }
-
 }

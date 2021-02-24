@@ -7,11 +7,11 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.User;
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 /** Servlet facilitating creation of tasks. */
 @WebServlet("/")
@@ -51,7 +51,7 @@ public class HomeServlet extends HttpServlet {
         return;
       }
 
-      //If the current user is fully registered
+      // If the current user is fully registered
       request.setAttribute("isLoggedIn", true);
       request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
     }
@@ -65,5 +65,4 @@ public class HomeServlet extends HttpServlet {
       throws IOException, ServletException {
     doGet(request, response);
   }
-
 }

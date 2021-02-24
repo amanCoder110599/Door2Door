@@ -3,9 +3,6 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Task;
@@ -15,11 +12,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 /** Servlet facilitating creation of tasks. */
 @WebServlet("/task/create")
@@ -72,16 +69,17 @@ public class TaskCreateServlet extends HttpServlet {
 
     // Form Entity
     Entity taskEntity = new Entity("Task");
-    Task task = new Task(
-      taskEntity.getKey().getId() /* Here Id is 0, as Entity is not yet put in Datastore */,
-      getParameter(request, "title", ""),
-      getParameter(request, "details", ""),
-      Long.parseLong(getParameter(request, "compensation", "0")),
-      loggedInUser.getId(),
-      getDateTimeLocalAsMillis(getParameter(request, "deadline", ""),
-        Long.parseLong(getParameter(request, "clientTzOffsetInMins", "0"))),
-      getParameter(request, "address", "")
-    );
+    Task task =
+        new Task(
+            taskEntity.getKey().getId() /* Here Id is 0, as Entity is not yet put in Datastore */,
+            getParameter(request, "title", ""),
+            getParameter(request, "details", ""),
+            Long.parseLong(getParameter(request, "compensation", "0")),
+            loggedInUser.getId(),
+            getDateTimeLocalAsMillis(
+                getParameter(request, "deadline", ""),
+                Long.parseLong(getParameter(request, "clientTzOffsetInMins", "0"))),
+            getParameter(request, "address", ""));
     if (!setTaskEntityProperties(task, taskEntity)) {
       return;
     }
@@ -100,8 +98,8 @@ public class TaskCreateServlet extends HttpServlet {
    * @param request The HTTP Servlet Request.
    * @param name The name of the rquest parameter.
    * @param defaultValue The default value to be returned if required parameter is unspecified.
-   * @return The request parameter, or the default value if the parameter
-   *         was not specified by the client
+   * @return The request parameter, or the default value if the parameter was not specified by the
+   *     client
    */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
@@ -141,9 +139,8 @@ public class TaskCreateServlet extends HttpServlet {
    * @param taskEntity The Entity of kind Task where details are to be updated.
    * @return True on succesful update. False, otherwise.
    */
-  private boolean setTaskEntityProperties (Task task, Entity taskEntity) {
-    if ((!taskEntity.getKind().equals("Task"))
-        || (taskEntity.getKey().getId() != task.getId())) {
+  private boolean setTaskEntityProperties(Task task, Entity taskEntity) {
+    if ((!taskEntity.getKind().equals("Task")) || (taskEntity.getKey().getId() != task.getId())) {
       return false;
     }
 
@@ -160,5 +157,4 @@ public class TaskCreateServlet extends HttpServlet {
     taskEntity.setProperty("active", task.isActive());
     return true;
   }
-
 }

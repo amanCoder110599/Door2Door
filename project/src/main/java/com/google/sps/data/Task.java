@@ -1,7 +1,6 @@
 package com.google.sps.data;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.List;
 
 /** A Task. */
 public final class Task {
@@ -13,15 +12,15 @@ public final class Task {
   private long compensation;
   private final long creatorId;
   private long deadline;
-  private String address;     // TODO: change into suitable address class.
+  private String address; // TODO: change into suitable address class.
   private boolean assigned;
   private long assigneeId;
   private float completionRating;
   private boolean active;
 
   /**
-   * Parametrized constructor for a Task that sets creationTime to current Server time.
-   * Since this sets some parameters with set defaults, this is to be used for task creation.
+   * Parametrized constructor for a Task that sets creationTime to current Server time. Since this
+   * sets some parameters with set defaults, this is to be used for task creation.
    *
    * @param id The unique id of the task assigned by the DataStore.
    * @param title The title string of the task.
@@ -31,8 +30,14 @@ public final class Task {
    * @param deadline The deadline expressed in Unix Epoch Time.
    * @param address The address of the task.
    */
-  public Task(long id, String title, String details, long compensation, long creatorId,
-      long deadline, String address) {
+  public Task(
+      long id,
+      String title,
+      String details,
+      long compensation,
+      long creatorId,
+      long deadline,
+      String address) {
     this.id = id;
     this.title = title;
     this.details = details;
@@ -63,9 +68,19 @@ public final class Task {
    * @param completionRating The rating of the task after completion.
    * @param active Boolean: true if it is active, else false.
    */
-  public Task(long id, String title, String details, long creationTime, long compensation,
-      long creatorId, long deadline, String address, boolean assigned, long assigneeId,
-      float completionRating, boolean active) {
+  public Task(
+      long id,
+      String title,
+      String details,
+      long creationTime,
+      long compensation,
+      long creatorId,
+      long deadline,
+      String address,
+      boolean assigned,
+      long assigneeId,
+      float completionRating,
+      boolean active) {
     this.id = id;
     this.title = title;
     this.details = details;
@@ -104,8 +119,20 @@ public final class Task {
     float completionRating = Float.parseFloat(entity.getProperty("completionRating").toString());
     boolean active = Boolean.parseBoolean(entity.getProperty("active").toString());
 
-    Task task = new Task(id, title, details, creationTime, compensation, creatorId, deadline,
-        address, assigned, assigneeId, completionRating, active);
+    Task task =
+        new Task(
+            id,
+            title,
+            details,
+            creationTime,
+            compensation,
+            creatorId,
+            deadline,
+            address,
+            assigned,
+            assigneeId,
+            completionRating,
+            active);
 
     return task;
   }
@@ -126,8 +153,8 @@ public final class Task {
   }
 
   /**
-   * Returns the creation time as the number of milliseconds from Unix Epoch.
-   * Unix Epoch: 00:00:00 UTC, 1st January 1970
+   * Returns the creation time as the number of milliseconds from Unix Epoch. Unix Epoch: 00:00:00
+   * UTC, 1st January 1970
    */
   public long getCreationTime() {
     return this.creationTime;
@@ -135,7 +162,7 @@ public final class Task {
 
   /** Returns the compensation. */
   public long getCompensation() {
-      return this.compensation;
+    return this.compensation;
   }
 
   /** Returns the creator's User ID. */
@@ -144,8 +171,8 @@ public final class Task {
   }
 
   /**
-   * Returns the deadline as the number of milliseconds from Unix Epoch.
-   * Unix Epoch: 00:00:00 UTC, 1st January 1970
+   * Returns the deadline as the number of milliseconds from Unix Epoch. Unix Epoch: 00:00:00 UTC,
+   * 1st January 1970
    */
   public long getDeadlineAsLong() {
     return this.deadline;
@@ -214,12 +241,11 @@ public final class Task {
 
   /** Activates the task. */
   public void activate() {
-      this.active = true;
+    this.active = true;
   }
 
   /** Deactivates the task. */
   public void deactivate() {
-      this.active = false;
+    this.active = false;
   }
-
 }
